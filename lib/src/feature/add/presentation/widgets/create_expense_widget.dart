@@ -38,14 +38,14 @@ class _CreateExpenseWidgetState extends ConsumerState<CreateExpenseWidget> {
     super.dispose();
   }
 
-
+  // Function to determine if the category is income or expense
   int determineCategoryType(String categoryName) {
     if (categoryName.endsWith('1')) {
-      return 1;
+      return 1; // Income
     } else if (categoryName.endsWith('2')) {
-      return 2;
+      return 2; // Expense
     }
-    return 0;
+    return 0; // Unknown type, handle accordingly if needed
   }
 
   @override

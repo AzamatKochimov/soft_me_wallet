@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:l/l.dart';
+import 'package:wallet/src/feature/add/presentation/pages/create_category_page.dart';
+import 'package:wallet/src/feature/add/presentation/widgets/create_expense_widget.dart';
+import 'package:wallet/src/feature/add/presentation/widgets/create_new_category_widget.dart';
 import 'package:wallet/src/feature/add/presentation/widgets/random_color_for_category_widget.dart';
+import 'package:wallet/src/feature/add/view_model/add_vm.dart';
 
 import '../../../../common/local/app_storage.dart';
 import '../../../../data/entity/category_model.dart';
-import '../../view_model/add_vm.dart';
-import 'create_expense_widget.dart';
-import 'create_new_category_widget.dart';
 
 class IncomeCategoriesWidget extends ConsumerStatefulWidget {
-  const IncomeCategoriesWidget({super.key, required this.addVM, required this.onTap});
+  const IncomeCategoriesWidget(
+      {super.key, required this.addVM, required this.onTap});
 
   final AddVM addVM;
   final VoidCallback onTap;
@@ -20,7 +22,8 @@ class IncomeCategoriesWidget extends ConsumerStatefulWidget {
   _IncomeCategoriesWidgetState createState() => _IncomeCategoriesWidgetState();
 }
 
-class _IncomeCategoriesWidgetState extends ConsumerState<IncomeCategoriesWidget> {
+class _IncomeCategoriesWidgetState
+    extends ConsumerState<IncomeCategoriesWidget> {
   @override
   void initState() {
     super.initState();
@@ -29,7 +32,7 @@ class _IncomeCategoriesWidgetState extends ConsumerState<IncomeCategoriesWidget>
 
   @override
   Widget build(BuildContext context) {
-    final categories = widget.addVM.categoryModel?.categories ?? [];
+    final categories = widget.addVM.categoryData?.categories ?? [];
 
     // Filter out categories whose last character is '1' or '2'
     final filteredCategories = categories.where((data) {
@@ -43,8 +46,10 @@ class _IncomeCategoriesWidgetState extends ConsumerState<IncomeCategoriesWidget>
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
       child: GridView.builder(
-        itemCount: filteredCategories.length + 1, // Adding 1 for the "Settings" column
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        itemCount: filteredCategories.length + 1,
+        // Adding 1 for the "Settings" column
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
         itemBuilder: (context, index) {
           if (index < filteredCategories.length) {
             final CategoryModel? data = filteredCategories[index];
@@ -109,14 +114,18 @@ class _IncomeCategoriesWidgetState extends ConsumerState<IncomeCategoriesWidget>
               children: [
                 IconButton(
                   onPressed: () {
-                    l.i("Token: ${AppStorage.$read(key: StorageKey.token)}");
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return CreateNewCategoryWidget(addVM: widget.addVM, onTap: widget.onTap);
-                      },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateCategoryPage(
+                          whichPage: 1,
+                          addVM: widget.addVM,
+                          onTap: widget.onTap,
+                        ),
+                      ),
                     );
                   },
+
                   icon: const CircleAvatar(
                     backgroundColor: Color(0xffC3C3C3),
                     child: Icon(

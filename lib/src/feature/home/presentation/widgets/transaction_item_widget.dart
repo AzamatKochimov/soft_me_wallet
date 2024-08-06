@@ -58,8 +58,8 @@ class TransactionItemWidget extends ConsumerWidget {
           await showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Edit Action Available'),
-              content: const Text('The edit action is now available from the backend. Please update your app to use this feature.'),
+              title: const Text('Edit not available'),
+              content: const Text('The edit action is not available at the backend. Please update app backend to use this feature.'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -68,7 +68,7 @@ class TransactionItemWidget extends ConsumerWidget {
               ],
             ),
           );
-          return false; // Prevent dismissal
+          return false;
         }
         return false;
       },

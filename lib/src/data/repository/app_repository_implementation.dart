@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:l/l.dart';
-
-import '../../common/server/api/api.dart';
-import '../../common/server/api/api_constants.dart';
-import '../entity/category_model.dart';
-import '../entity/expense_model.dart';
-import 'app_repository.dart';
+import 'package:wallet/src/common/server/api/api.dart';
+import 'package:wallet/src/common/server/api/api_constants.dart';
+import 'package:wallet/src/data/entity/category_model.dart';
+import 'package:wallet/src/data/entity/expense_model.dart';
+import 'package:wallet/src/data/repository/app_repository.dart';
 
 @immutable
 class AppRepositoryImpl implements AppRepository {
@@ -103,7 +101,7 @@ class AppRepositoryImpl implements AppRepository {
   Future<void> deleteCategory(int categoryId) async {
     try {
       final String? response = await ApiService.delete(
-        '${ApiConst.deleteCategory}/$categoryId'
+          '${ApiConst.deleteCategory}/$categoryId'
       );
       if (response != null) {
         l.i("Category deleted successfully: $response");
@@ -115,14 +113,14 @@ class AppRepositoryImpl implements AppRepository {
     }
   }
 
+
   @override
   Future<void> editCategory({required int categoryId, required String name, required int categoryType}) async {
     try {
       final String? response = await ApiService.put(
         '${ApiConst.editCategory}/$categoryId',
         <String, dynamic>{
-          "name": name,
-          "categoryType": categoryType,
+          "name": "$name $categoryType",
         },
       );
       if (response != null) {

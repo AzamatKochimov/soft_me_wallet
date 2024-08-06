@@ -35,14 +35,14 @@ class _SignedProfileAppBarState extends ConsumerState<SignedProfileAppBar> {
               : null,
         ),
         title: Text(
-          "Name Surname",
+          "No get user api",
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
         subtitle: Text(
-          "username",
+          "Given from backend",
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w400,

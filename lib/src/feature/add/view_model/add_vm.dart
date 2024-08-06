@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l/l.dart';
-
-import '../../../data/entity/category_model.dart';
-import '../../../data/repository/app_repository_implementation.dart';
+import 'package:wallet/src/data/entity/category_model.dart';
+import 'package:wallet/src/data/repository/app_repository_implementation.dart';
 
 class AddVM extends ChangeNotifier {
   AddVM(this._repository) : super() {
@@ -14,13 +13,17 @@ class AddVM extends ChangeNotifier {
   final AppRepositoryImpl _repository;
   late TextEditingController categoryNameController;
   late TextEditingController amountController;
-  CategoryData? categoryModel;
+  CategoryData? categoryData;
+  List<CategoryModel> expensesList = <CategoryModel>[];
+  List<CategoryModel> incomeList = <CategoryModel>[];
   int _currentIndex = 0;
   bool _isLoading = false;
   String? _error;
 
   int get currentIndex => _currentIndex;
+
   bool get isLoading => _isLoading;
+
   String? get error => _error;
 
   void changeTab(int index) {
@@ -48,14 +51,64 @@ class AddVM extends ChangeNotifier {
   Future<void> getAllCategories() async {
     _setLoading(true);
     try {
-      categoryModel = await _repository.getAllCategories();
-      l.i("CategoryModel Data: ${categoryModel?.categories}"); // Log categoryModel
+      categoryData = await _repository.getAllCategories();
+      l.i("CategoryModel Data: ${categoryData?.categories}"); // Log categoryModel
       _error = null;
     } catch (e) {
       _error = "Error fetching categories: $e";
     } finally {
       _setLoading(false);
     }
+  }
+
+
+  Future<void> updateCategoryByID({required int categoryID, required String categoryName,required int categoryType }) async {
+    _setLoading(true);
+    try {
+      await _repository.editCategory(categoryId: categoryID, name: categoryName, categoryType: categoryType);
+      // Refresh the category list after deletion
+      await getAllCategories();
+      _error = null;
+    } catch (e) {
+      _error = "Error updating category: $e";
+    } finally {
+      _setLoading(false);
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteCategoryByID(int categoryId) async {
+    _setLoading(true);
+    try {
+      await _repository.deleteCategory(categoryId);
+      // Refresh the category list after deletion
+      await getAllCategories();
+      _error = null;
+    } catch (e) {
+      _error = "Error deleting category: $e";
+    } finally {
+      _setLoading(false);
+    }
+    notifyListeners();
+  }
+
+
+  Future<void> separateCategories() async {
+    if (categoryData != null) {
+      expensesList = categoryData!.categories.where((data) {
+        if (data.name.isNotEmpty) {
+          return data.name.trim().endsWith('2');
+        }
+        return false;
+      }).toList();
+      incomeList = categoryData!.categories.where((data) {
+        if (data.name.isNotEmpty) {
+          return data.name.trim().endsWith('1');
+        }
+        return false;
+      }).toList();
+    }
+    notifyListeners();
   }
 
   Future<void> addExpense({

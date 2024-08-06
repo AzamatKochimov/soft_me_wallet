@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:l/l.dart';
+import 'package:wallet/src/feature/add/presentation/widgets/create_expense_widget.dart';
+import 'package:wallet/src/feature/add/presentation/widgets/create_new_category_widget.dart';
 import 'package:wallet/src/feature/add/presentation/widgets/random_color_for_category_widget.dart';
+import 'package:wallet/src/feature/add/view_model/add_vm.dart';
+
 import '../../../../common/local/app_storage.dart';
 import '../../../../data/entity/category_model.dart';
-import '../../view_model/add_vm.dart';
 import '../pages/create_category_page.dart';
-import 'create_expense_widget.dart';
 
 class ExpensesWidget extends ConsumerStatefulWidget {
   const ExpensesWidget({super.key, required this.addVM, required this.onTap});
@@ -28,8 +30,9 @@ class _ExpensesWidgetState extends ConsumerState<ExpensesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final categories = widget.addVM.categoryModel?.categories ?? [];
+    final categories = widget.addVM.categoryData?.categories ?? [];
 
+    // Filter out categories whose last character is '1' or '2'
     final filteredCategories = categories.where((data) {
       if (data.name.isNotEmpty) {
         String lastChar = data.name.substring(data.name.length - 1);
@@ -41,7 +44,7 @@ class _ExpensesWidgetState extends ConsumerState<ExpensesWidget> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
       child: GridView.builder(
-        itemCount: filteredCategories.length + 1,
+        itemCount: filteredCategories.length + 1, // Adding 1 for the "Settings" column
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
         itemBuilder: (context, index) {
           if (index < filteredCategories.length) {
@@ -84,15 +87,15 @@ class _ExpensesWidgetState extends ConsumerState<ExpensesWidget> {
                       l.i("Token: ${AppStorage.$read(key: StorageKey.token)}");
 
                       /// Navigator.push used
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateCategoryPage(
-                            addVM: widget.addVM,
-                            onTap: widget.onTap,
-                          ),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => CreateCategoryPage(
+                      //       addVM: widget.addVM,
+                      //       onTap: widget.onTap,
+                      //     ),
+                      //   ),
+                      // );
                     },
                     icon: const CircleAvatar(
                       backgroundColor: Color(0xffC3C3C3),
@@ -108,19 +111,18 @@ class _ExpensesWidgetState extends ConsumerState<ExpensesWidget> {
               children: [
                 IconButton(
                   onPressed: () {
-                    l.i("Token: ${AppStorage.$read(key: StorageKey.token)}");
-
-                    /// Navigator.push used
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => CreateCategoryPage(
+                          whichPage: 2,
                           addVM: widget.addVM,
                           onTap: widget.onTap,
                         ),
                       ),
                     );
                   },
+
                   icon: const CircleAvatar(
                     backgroundColor: Color(0xffC3C3C3),
                     child: Icon(
