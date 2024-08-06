@@ -15,6 +15,7 @@ class ApiConst {
   static const editCategory = "/api/categories";
   static const deleteCategory = "/api/categories";
   static const uploadAvatar = "/api/avatar";
+  static const putTransactionByID = "/api/transactions";
 
 }
 

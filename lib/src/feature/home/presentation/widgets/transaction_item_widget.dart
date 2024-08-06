@@ -13,18 +13,76 @@ class TransactionItemWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final homeVM = ref.watch(homeVMProvider);
 
-    return ListTile(
-      leading: Icon(
-        transaction.type == "1" ? Icons.money_off : Icons.money_off_outlined,
-        color: transaction.type == "1" ? Colors.green : Colors.red,
+    return Dismissible(
+      key: Key(transaction.id.toString()),
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: 16),
+        child: const Icon(Icons.delete, color: Colors.white),
       ),
-      title: Text(homeVM.categoryNameById(transaction.categoryId)),
-      trailing: Text(
-        transaction.type == "2"
-            ? '${double.tryParse(transaction.amount)?.toStringAsFixed(2)}'
-            : '${double.tryParse(transaction.amount)?.toStringAsFixed(2)}',
-        style: TextStyle(
-          color: transaction.type == "2" ? Colors.red : Colors.green,
+      secondaryBackground: Container(
+        color: Colors.blue,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 16),
+        child: const Icon(Icons.edit, color: Colors.white),
+      ),
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.startToEnd) {
+          // Delete action
+          final bool? confirmDelete = await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Confirm Delete'),
+              content: const Text('Are you sure you want to delete this transaction?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Delete'),
+                ),
+              ],
+            ),
+          );
+
+          if (confirmDelete == true) {
+            await homeVM.deleteTransaction(transaction.id);
+          }
+
+          return confirmDelete ?? false;
+        } else if (direction == DismissDirection.endToStart) {
+          // Show alert dialog about the edit action
+          await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Edit Action Available'),
+              content: const Text('The edit action is now available from the backend. Please update your app to use this feature.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+          return false; // Prevent dismissal
+        }
+        return false;
+      },
+      child: ListTile(
+        leading: Icon(
+          transaction.type == "1" ? Icons.money_off : Icons.money_off_outlined,
+          color: transaction.type == "1" ? Colors.green : Colors.red,
+        ),
+        title: Text(homeVM.categoryNameById(transaction.categoryId)),
+        trailing: Text(
+          '${double.tryParse(transaction.amount)?.toStringAsFixed(2)}',
+          style: TextStyle(
+            color: transaction.type == "2" ? Colors.red : Colors.green,
+          ),
         ),
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l/l.dart';
-import 'package:wallet/setup.dart';
+
 import '../../../common/local/app_storage.dart';
 import '../../../common/server/api/api.dart';
 import '../../../common/server/api/api_constants.dart';
@@ -25,11 +25,17 @@ class HomeVM extends ChangeNotifier {
   }
 
   List<Transaction> get transactions => _transactions;
+
   double get incomeSum => _incomeSum;
+
   double get expenseSum => _expenseSum;
+
   double get balance => _incomeSum - _expenseSum;
+
   bool get isLoading => _isLoading;
+
   String? get error => _error;
+
   bool get isLoggedIn => _isLoggedIn;
 
   Future<void> _checkLoginStatus() async {
@@ -143,9 +149,54 @@ class HomeVM extends ChangeNotifier {
 
   String categoryNameById(String id) {
     final category = _categories.firstWhere(
-          (cat) => cat.id.toString() == id,
+      (cat) => cat.id.toString() == id,
       orElse: () => CategoryModel(id: 0, name: 'Unknown'),
     );
     return category.name.substring(0, category.name.length - 2);
+  }
+
+  Future<void> deleteTransaction(int transactionId) async {
+    _setLoading(true);
+    try {
+      await ApiService.delete('api/transactions/$transactionId');
+      _transactions.removeWhere((transaction) => transaction.id == transactionId);
+      _calculateIncomeSum();
+      _calculateExpenseSum();
+      notifyListeners();
+    } catch (e) {
+      _error = "Error deleting transaction: $e";
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<void> editTransaction(Transaction transaction) async {
+    _setLoading(true);
+    try {
+      final url = '${ApiConst.putTransactionByID}/${transaction.id}';
+
+      await ApiService.put(
+        url,
+        {
+          'date': transaction.date.toIso8601String(),
+          'amount': transaction.amount,
+          'type': transaction.type,
+          'category_id': transaction.categoryId,
+        },
+        transaction.id,
+      );
+
+      final index = _transactions.indexWhere((t) => t.id == transaction.id);
+      if (index != -1) {
+        _transactions[index] = transaction;
+        _calculateIncomeSum();
+        _calculateExpenseSum();
+      }
+      notifyListeners();
+    } catch (e) {
+      _error = "Error editing transaction: $e";
+    } finally {
+      _setLoading(false);
+    }
   }
 }

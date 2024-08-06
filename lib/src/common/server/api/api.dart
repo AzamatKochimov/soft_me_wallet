@@ -146,7 +146,7 @@ class ApiService {
     }
   }
 
-  static Future<String?> put(String api, Map<String, dynamic> data) async {
+  static Future<String?> put(String api, Map<String, dynamic> data, [int? params]) async {
     try {
       final response = await (await initDio()).put<dynamic>(api, data: data);
 

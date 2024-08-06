@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DatePickerButton extends StatefulWidget {
   const DatePickerButton({super.key});
@@ -33,7 +32,7 @@ class DatePickerButtonState extends State<DatePickerButton> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          "${selectedDate.year}", // Display only the year
+          "${selectedDate.year}",
           // style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         InkWell(
@@ -42,7 +41,7 @@ class DatePickerButtonState extends State<DatePickerButton> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                _monthName(selectedDate.month), // Display the month name
+                _monthName(selectedDate.month),
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
               const Icon(Icons.arrow_drop_down),
