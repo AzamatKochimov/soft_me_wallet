@@ -35,14 +35,14 @@ class _SignedProfileAppBarState extends ConsumerState<SignedProfileAppBar> {
               : null,
         ),
         title: Text(
-          "Joseph Rogan",
+          "Name Surname",
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
         subtitle: Text(
-          "jonny0112",
+          "username",
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w400,
