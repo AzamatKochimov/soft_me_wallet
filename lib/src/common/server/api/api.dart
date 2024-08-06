@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:l/l.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../local/app_storage.dart';
 import '../interceptors/connectivity_interceptor.dart';
@@ -50,7 +49,7 @@ class ApiService {
       'Accept': isUpload ? 'multipart/form-data' : 'application/json; charset=UTF-8',
     };
 
-    final token = await AppStorage.$read(key: StorageKey.user) ?? '';
+    final token = await AppStorage.$read(key: StorageKey.token) ?? '';
 
     if (token.isNotEmpty) {
       headers.putIfAbsent('Authorization', () => 'Bearer $token');
@@ -59,14 +58,14 @@ class ApiService {
     return headers;
   }
 
-  static Future<String?> get(String api, Map<String, dynamic> data) async {
+  static Future<String?> get(String api, [Map<String, dynamic>? params]) async {
     try {
-      final response = await (await initDio()).get<dynamic>(api, data: data);
+      final Response<dynamic> response = await (await initDio()).get<dynamic>(api, queryParameters: params);
       return jsonEncode(response.data);
     } on TimeoutException catch (_) {
-      l.e('The connection has timed out, Please try again!');   
+      l.e("The connection has timed out, Please try again!");
       rethrow;
-    } on DioException catch (e) {
+    } on DioError catch (e) {
       l.e(e.response.toString());
       rethrow;
     } on Object catch (e) {
@@ -75,39 +74,40 @@ class ApiService {
     }
   }
 
-static Future<String?> post(String api, Map<String, dynamic> data, {required Map<String, dynamic> params}) async {
-  try {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token') ?? '';
-    final response = await (await initDio()).post<dynamic>(
-      api,
-      data: data,
-      queryParameters: params,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json; charset=UTF-8',
-        },
-      ),
-    );
-    return jsonEncode(response.data);
-  } on TimeoutException catch (_) {
-    l.e('The connection has timed out, Please try again!');
-    rethrow;
-  } on DioException catch (e) {
-    l.e(e.response.toString());
-    rethrow;
-  } on Object catch (_) {
-    rethrow;
+  static Future<String?> post(String api, Map<String, dynamic> data, {required Map<String, dynamic> params}) async {
+    try {
+
+      // final AppStorage prefs = await AppStorage.getInstance();
+      String? token = await AppStorage.$read(key: StorageKey.token);
+      final response = await (await initDio()).post<dynamic>(
+        api,
+        data: data,
+        queryParameters: params,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json; charset=UTF-8',
+          },
+        ),
+      );
+      return jsonEncode(response.data);
+    } on TimeoutException catch (_) {
+      l.e('The connection has timed out, Please try again!');
+      rethrow;
+    } on DioException catch (e) {
+      l.e(e.response.toString());
+      rethrow;
+    } on Object catch (_) {
+      rethrow;
+    }
   }
-}
 
   static Future<String?> multipart(
-    String api,
-    List<File> paths, {
-    bool picked = false,
-  }) async {
+      String api,
+      List<File> paths, {
+        bool picked = false,
+      }) async {
     final formData = paths.mappedFormData(isPickedFile: picked);
 
     try {
@@ -163,9 +163,9 @@ static Future<String?> post(String api, Map<String, dynamic> data, {required Map
   }
 
   static Future<String?> putAccount(
-    String api,
-    Map<String, dynamic> params,
-  ) async {
+      String api,
+      Map<String, dynamic> params,
+      ) async {
     try {
       final response = await (await initDio()).put<dynamic>(api, queryParameters: params);
 
@@ -181,9 +181,9 @@ static Future<String?> post(String api, Map<String, dynamic> data, {required Map
     }
   }
 
-  static Future<String?> delete(String api, Map<String, dynamic> params) async {
+  static Future<String?> delete(api) async {
     try {
-      final _ = await (await initDio()).delete<dynamic>(api, queryParameters: params);
+      final _ = await (await initDio()).delete<dynamic>(api);
       return 'success';
     } on TimeoutException catch (_) {
       l.e('The connection has timed out, Please try again!');
@@ -199,13 +199,13 @@ static Future<String?> post(String api, Map<String, dynamic> data, {required Map
 
 extension ListFileToFormData on List<File> {
   Future<FormData> mappedFormData({required bool isPickedFile}) async => FormData.fromMap(
-        <String, MultipartFile>{
-          for (var v in this) ...{
-            DateTime.now().toString(): MultipartFile.fromBytes(
-              isPickedFile ? v.readAsBytesSync() : (await rootBundle.load(v.path)).buffer.asUint8List(),
-              filename: v.path.substring(v.path.lastIndexOf('/')),
-            ),
-          },
-        },
-      );
+    <String, MultipartFile>{
+      for (var v in this) ...{
+        DateTime.now().toString(): MultipartFile.fromBytes(
+          isPickedFile ? v.readAsBytesSync() : (await rootBundle.load(v.path)).buffer.asUint8List(),
+          filename: v.path.substring(v.path.lastIndexOf('/')),
+        ),
+      },
+    },
+  );
 }

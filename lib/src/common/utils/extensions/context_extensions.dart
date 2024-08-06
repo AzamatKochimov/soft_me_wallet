@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import "package:soft_me_wallet/generated/l10n.dart";
+
+import "../../../../generated/l10n.dart";
 
 extension CustomContextExtension on BuildContext {
   S get localized => S.of(this);

@@ -26,7 +26,7 @@ class AppStorage extends FlutterSecureStorage {
   }
 
   static Future<void> $write(
-      {required StorageKey key, required String value}) async {
+      {required StorageKey key, required String? value}) async {
     await _storage.write(key: key.name, value: value);
   }
 

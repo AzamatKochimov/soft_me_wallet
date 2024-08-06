@@ -6,9 +6,9 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:soft_me_wallet/src/feature/auth/view_model/auth_vm.dart';
 
 import '../../../../common/routes/app_route_name.dart';
+import '../../view_model/auth_vm.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -76,17 +76,19 @@ class LoginPage extends ConsumerWidget {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
-                Map<String, dynamic> res = await con.login({"username": usernameController.text, "password": passwordController.text});
-                if (res['status'] == true){
+                Map<String, dynamic> res = await con.login({
+                  "username": usernameController.text,
+                  "password": passwordController.text
+                });
+                if (res['status'] == true) {
                   // GoRouter.of(context).go('/path')
                   log("login successful");
-                      context.go(AppRouteName.reportsPage);
-                } else{
+                  context.go(AppRouteName.recordsPage);
+                } else {
                   log("login not successful");
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content:
-                      Text('Login failed. Please try again.'),
+                      content: Text('Login failed. Please try again.'),
                       duration: Duration(seconds: 3),
                     ),
                   );
@@ -94,7 +96,8 @@ class LoginPage extends ConsumerWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.amberAccent,
-                padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 2),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 100, vertical: 2),
               ),
               child: const Text(
                 'Login',
@@ -106,6 +109,13 @@ class LoginPage extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: ElevatedButton(
+        onPressed: () {
+          context.go(AppRouteName.recordsPage);
+        },
+        child: const Text("Skip"),
       ),
     );
   }

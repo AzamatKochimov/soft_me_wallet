@@ -7,6 +7,13 @@ class ApiConst {
 
   // Courses api
   static const login = '/api/login';
+  static const createCategory = "/api/categories";
+  static const getAllCategories = "/api/categories";
+  static const createExpense = "/api/transactions";
+  static const getAllExpenses = "/api/transactions";
+  static const editCategory = "/api/categories";
+  static const deleteCategory = "/api/categories";
+  static const uploadAvatar = "/api/avatar";
 
 }
 

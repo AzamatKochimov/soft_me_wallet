@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
-import "package:soft_me_wallet/generated/l10n.dart";
+import "../../../generated/l10n.dart";
 import "../../feature/settings/inherited/inherited_local_notifier.dart";
 import "../../feature/settings/inherited/local_controller.dart";
 import "../routes/app_router.dart";

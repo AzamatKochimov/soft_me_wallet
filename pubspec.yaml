@@ -1,5 +1,5 @@
-name: soft_me_wallet
-description: "Project for Soft Me Comp"
+name: wallet
+description: "Wallet task"
 
 publish_to: 'none'
 
@@ -46,6 +46,10 @@ dependencies:
   # generator
   flutter_gen: any
 
+  # for Statistics
+  pie_chart: ^5.4.0
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -53,7 +57,6 @@ dev_dependencies:
   build_runner: ^2.4.8
   flutter_lints: ^3.0.0
   flutter_gen_runner: ^5.6.0
-  flutter_launcher_icons: ^0.13.1 # Move flutter_launcher_icons to dev_dependencies
 
 flutter:
   generate: true
@@ -62,13 +65,13 @@ flutter:
   assets:
     - assets/
     - assets/images/
-    - assets/icons/
-    - assets/fonts/
+  #   - assets/icons/
+  #   - assets/fonts/
 
 flutter_intl:
   enabled: true
 
-#flutter_launcher_icons:
-#  android: true
-#  ios: true
-#  image_path: "assets/images/unicornLogo.png"
+# flutter_launcher_icons:
+#   android: true
+#   ios: true
+#   image_path: "assets/images/unicorn_logo.png"

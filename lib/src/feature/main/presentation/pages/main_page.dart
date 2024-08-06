@@ -1,9 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
-import "package:soft_me_wallet/src/common/routes/app_route_name.dart";
-import "package:soft_me_wallet/src/feature/add/presentation/pages/add_page.dart";
 
+import "../../../../common/routes/app_route_name.dart";
 import "../../view_model/main_vm.dart";
 
 class MainPage extends ConsumerWidget {

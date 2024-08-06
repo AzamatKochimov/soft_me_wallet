@@ -1,14 +1,14 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
-import "package:soft_me_wallet/src/feature/add/presentation/pages/add_page.dart";
-import "package:soft_me_wallet/src/feature/auth/presentation/pages/login_page.dart";
-import "package:soft_me_wallet/src/feature/profile/presentation/pages/not_signed_porfile_page.dart";
-import "package:soft_me_wallet/src/feature/reports/presentation/pages/reports_page.dart";
-import "package:soft_me_wallet/src/feature/statistics/presentation/pages/statistics_page.dart";
 
+import "../../feature/add/presentation/pages/add_page.dart";
+import "../../feature/auth/presentation/pages/login_page.dart";
 import "../../feature/home/presentation/pages/home.dart";
 import "../../feature/main/presentation/pages/main_page.dart";
+import "../../feature/profile/presentation/pages/not_signed_porfile_page.dart";
 import "../../feature/profile/presentation/pages/profile_page.dart";
+import "../../feature/reports/presentation/pages/reports_page.dart";
+import "../../feature/statistics/presentation/pages/statistics_page.dart";
 import "app_route_name.dart";
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: "root");
@@ -31,34 +31,6 @@ class AppRouter {
     builder: (BuildContext context, GoRouterState state) {
       return const AddPage();
     },
-    routes: const <RouteBase>[
-      // GoRoute(
-      //   path: AppRouteName.addPage,
-      //   builder: (BuildContext context, GoRouterState state) {
-      //     return const AddPage();
-      //   },
-      // ),
-      // GoRoute(
-      //   path: AppRouteName.cardSMSCodePage,
-      //   builder: (BuildContext context, GoRouterState state) {
-      //     return const CardSMSCodePage();
-      //   },
-      // ),
-      // GoRoute(
-      //   path: AppRouteName.confirmPaymentPage,
-      //   builder: (BuildContext context, GoRouterState state) {
-      //     return const ConfirmPaymentPage();
-      //   },
-      //   routes: <RouteBase>[
-      //     GoRoute(
-      //       path: AppRouteName.addSuccessPage,
-      //       builder: (BuildContext context, GoRouterState state) {
-      //         return const AddSuccessPage();
-      //       },
-      //     ),
-      //   ],
-      // ),
-    ],
   );
 
   static final GoRouter router = GoRouter(
