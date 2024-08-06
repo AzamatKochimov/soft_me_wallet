@@ -100,8 +100,9 @@ class AuthVM with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    await AppStorage.$write(key: StorageKey.token, value: null);
+    await AppStorage.$delete(key: StorageKey.token);
     _token = null;
+    log(_token.toString());
     notifyListeners();
   }
 }

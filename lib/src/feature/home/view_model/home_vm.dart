@@ -33,7 +33,8 @@ class HomeVM extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   Future<void> _checkLoginStatus() async {
-    _isLoggedIn = AppStorage.$read(key: StorageKey.token) != null;
+    final token = await AppStorage.$read(key: StorageKey.token);
+    _isLoggedIn = token != null;
     notifyListeners();
     if (_isLoggedIn) {
       await _fetchExpenses();
@@ -74,6 +75,7 @@ class HomeVM extends ChangeNotifier {
         _error = null;
       } else {
         _error = "Failed to fetch categories";
+        // _isLoggedIn = false;
       }
     } catch (e) {
       _error = "Error fetching categories: $e";
@@ -111,7 +113,7 @@ class HomeVM extends ChangeNotifier {
         l.i("GetAllExpenses Transactions: ${expenseModel.transactions}");
         return expenseModel;
       } else {
-        _isLoggedIn = false; // Set isLoggedIn to false on failure
+        _isLoggedIn = false;
         return null;
       }
     } catch (e) {
