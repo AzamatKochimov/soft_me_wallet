@@ -20,7 +20,7 @@ class CreateNewCategoryWidget extends StatelessWidget {
           const Text("Categories"),
           const Divider(),
           const CategoryListWidget(),
-          const SizedBox(height: 20), // Space between category list and add category section
+          const SizedBox(height: 20),
           const Text("Add New Category"),
           const Divider(),
           TextField(

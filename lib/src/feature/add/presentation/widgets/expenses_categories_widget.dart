@@ -30,7 +30,6 @@ class _ExpensesWidgetState extends ConsumerState<ExpensesWidget> {
   Widget build(BuildContext context) {
     final categories = widget.addVM.categoryModel?.categories ?? [];
 
-    // Filter out categories whose last character is '1' or '2'
     final filteredCategories = categories.where((data) {
       if (data.name.isNotEmpty) {
         String lastChar = data.name.substring(data.name.length - 1);
@@ -42,7 +41,7 @@ class _ExpensesWidgetState extends ConsumerState<ExpensesWidget> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
       child: GridView.builder(
-        itemCount: filteredCategories.length + 1, // Adding 1 for the "Settings" column
+        itemCount: filteredCategories.length + 1,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
         itemBuilder: (context, index) {
           if (index < filteredCategories.length) {
