@@ -7,6 +7,7 @@ class ApiConst {
 
   // Courses api
   static const login = '/api/login';
+  static const register = '/api/register';
   static const createCategory = "/api/categories";
   static const getAllCategories = "/api/categories";
   static const createExpense = "/api/transactions";

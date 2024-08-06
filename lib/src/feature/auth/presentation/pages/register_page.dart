@@ -114,24 +114,25 @@ class RegisterPage extends ConsumerWidget {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
-                // Map<String, dynamic> res = await con.login({
-                //   "username": usernameController.text,
-                //   "password": passwordController.text
-                // });
-                // if (res['status'] == true) {
-                //   // GoRouter.of(context).go('/path')
-                //   log("login successful");
-                //   context.go(AppRouteName.recordsPage);
-                // } else {
-                //   log("login not successful");
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //     const SnackBar(
-                //       content: Text('Login failed. Please try again.'),
-                //       duration: Duration(seconds: 3),
-                //     ),
-                //   );
-                // }
-                context.go(AppRouteName.loginPage);
+                Map<String, dynamic> res = await con.register({
+                  "name": firstNameController.text,
+                  "surname": lastNameController.text,
+                  "username": usernameController.text,
+                  "password": passwordController.text
+                });
+                if (res['status'] == true) {
+                  // GoRouter.of(context).go('/path')
+                  log("register successful");
+                  context.go(AppRouteName.loginPage);
+                } else {
+                  log("register not successful");
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Register failed. Please try again.'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.amberAccent,
