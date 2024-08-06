@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wallet/src/common/local/app_storage.dart';
+import 'package:wallet/src/feature/home/view_model/home_vm.dart';
 
 import '../../../../common/routes/app_route_name.dart';
 import '../../../auth/view_model/auth_vm.dart';
@@ -32,6 +34,7 @@ class ProfilePage extends ConsumerWidget {
             ElevatedButton(
               onPressed: () async {
                 await ref.read(authVM.notifier).logout();
+                await AppStorage.$write(key: StorageKey.token, value: null);
                 context.go(AppRouteName.loginPage);
               },
               child: const Text('Logout'),

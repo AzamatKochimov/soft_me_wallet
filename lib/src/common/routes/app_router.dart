@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
+import "package:wallet/src/feature/auth/presentation/pages/register_page.dart";
 
 import "../../feature/add/presentation/pages/add_page.dart";
 import "../../feature/auth/presentation/pages/login_page.dart";
@@ -43,6 +44,13 @@ class AppRouter {
         path: AppRouteName.loginPage,
         builder: (BuildContext context, GoRouterState state) {
           return const LoginPage();
+        },
+      ),
+      GoRoute(
+        name: "RegisterPage",
+        path: AppRouteName.registerPage,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RegisterPage();
         },
       ),
       GoRoute(

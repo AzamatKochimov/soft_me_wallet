@@ -14,46 +14,6 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final homeVM = ref.watch(homeVMProvider);
 
-    if (!homeVM.isLoggedIn) {
-      return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.amberAccent,
-          title: const Text("Soft Me Wallet", style: TextStyle(fontWeight: FontWeight.w500)),
-          centerTitle: true,
-          leading: Padding(
-            padding: EdgeInsets.only(left: 10.w),
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.search),
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 10.w),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.calendar_month_outlined),
-              ),
-            ),
-          ],
-          bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(60.0), // Adjust height as needed
-            child: HomeAppBarBottomWidget(),
-          ),
-        ),
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: const Text(
-              "No transactions yet! please log in or register to view or add transactions",
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      );
-    }
-
     if (homeVM.isLoading) {
       return const Scaffold(
         backgroundColor: Colors.white,
@@ -113,7 +73,7 @@ class HomePage extends ConsumerWidget {
           child: HomeAppBarBottomWidget(),
         ),
       ),
-      body: ListView(
+      body: homeVM.isLoggedIn? ListView(
         children: groupedTransactions.entries.map((entry) {
           final date = entry.key;
           final transactions = entry.value;
@@ -135,6 +95,14 @@ class HomePage extends ConsumerWidget {
             ],
           );
         }).toList(),
+      ) : Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          child: const Text(
+            "No transactions yet! please log in or register to view or add transactions",
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }

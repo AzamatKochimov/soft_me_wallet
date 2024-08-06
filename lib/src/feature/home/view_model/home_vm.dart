@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:l/l.dart';
+import 'package:wallet/setup.dart';
 import '../../../common/local/app_storage.dart';
 import '../../../common/server/api/api.dart';
 import '../../../common/server/api/api_constants.dart';
@@ -17,7 +18,7 @@ class HomeVM extends ChangeNotifier {
   double _expenseSum = 0.0;
   bool _isLoading = false;
   String? _error;
-  bool _isLoggedIn = false; // New property
+  bool _isLoggedIn = false;
 
   HomeVM(this.ref) {
     _checkLoginStatus();
@@ -32,12 +33,11 @@ class HomeVM extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   Future<void> _checkLoginStatus() async {
-    AppStorage.$read(key: StorageKey.token) == null ?
-    _isLoggedIn = true : _isLoggedIn = false;
+    _isLoggedIn = AppStorage.$read(key: StorageKey.token) != null;
     notifyListeners();
     if (_isLoggedIn) {
-      _fetchExpenses();
-      _fetchCategories();
+      await _fetchExpenses();
+      await _fetchCategories();
     }
   }
 
@@ -111,11 +111,12 @@ class HomeVM extends ChangeNotifier {
         l.i("GetAllExpenses Transactions: ${expenseModel.transactions}");
         return expenseModel;
       } else {
-        l.e("Failed to fetch expenses");
+        _isLoggedIn = false; // Set isLoggedIn to false on failure
         return null;
       }
     } catch (e) {
       l.e("Error fetching expenses: $e");
+      _isLoggedIn = false;
       return null;
     }
   }

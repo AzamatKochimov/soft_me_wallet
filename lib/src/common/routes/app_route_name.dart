@@ -14,13 +14,14 @@ final class AppRouteName {
   static const String profilePage = "/profile";
   static const String notSignedProfilePage = "/not_signed_profile";
   static const String loginPage = "/login";
+  static const String registerPage = "/register_page";
 
   // statistics
-  static const String statisticsPage = "/statisticsPage";
+  static const String statisticsPage = "/statistics_page";
 
   // reports
-  static const String reportsPage = "/reportsPage";
+  static const String reportsPage = "/reports_page";
 
-  static const String addDataPage = "/addDataPage";
+  static const String addDataPage = "/addData_page";
 
 }
